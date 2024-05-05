@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Start() {
         bm = GetComponent<BoardManager>();
+        // gm runs first so set bm.gm
+        bm.gm = this;
 
         // J piece
         bm.PlaceCell(6, 9, CellType.Color2);

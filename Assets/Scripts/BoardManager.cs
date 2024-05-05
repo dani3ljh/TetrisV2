@@ -23,7 +23,8 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private GameObject cellPrefab;
     [SerializeField] private Material[] materials;
 
-    private GameManager gm;
+    [HideInInspector] public GameManager gm;
+
     #nullable enable
     private GameObject?[,] cellGameObjects = new GameObject?[10, 20];
 
@@ -31,8 +32,6 @@ public class BoardManager : MonoBehaviour
     /// Start is called on the frame when a script is enabled just before any of the Update methods are called
     /// </summary>
     private void Start() {
-        gm = GetComponent<GameManager>();
-
         // Initialize cells
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 20; y++) {
