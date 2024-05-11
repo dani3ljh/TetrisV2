@@ -3,22 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Represents a cell's state of either empty, color1, color2, or color3
-/// </summary>
-public enum CellType {
-    Empty,
-    Color1,
-    Color2,
-    Color3
-}
-
-/// <summary>
 /// Manages the state of the board
 /// </summary>
 public class BoardManager : MonoBehaviour
 {
-    public CellType[,] cells = new CellType[10, 20];
-
     [SerializeField] private Transform cellsParent;
     [SerializeField] private GameObject cellPrefab;
     [SerializeField] private Material[] materials;
@@ -26,18 +14,13 @@ public class BoardManager : MonoBehaviour
     [HideInInspector] public GameManager gm;
 
     #nullable enable
-    private GameObject?[,] cellGameObjects = new GameObject?[10, 20];
+    private Cell?[,] cells = new Cell?[10, 20];
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before any of the Update methods are called
     /// </summary>
     private void Start() {
-        // Initialize cells
-        for (int x = 0; x < 10; x++) {
-            for (int y = 0; y < 20; y++) {
-                cells[x, y] = CellType.Empty;
-            }
-        }
+
     }
 
     /// <summary>
@@ -47,15 +30,15 @@ public class BoardManager : MonoBehaviour
         
     }
 
-    public void PlaceCell(int x, int y, CellType color) {
-        cells[x, y] = color;
+    public void PlaceCell(int x, int y, CellColor? color) {
+        Cell? oldCellScript = cells[x, y];
 
-        if (color == CellType.Empty) {
-            GameObject? cellGameObject = cellGameObjects[x, y];
-            if (cellGameObject != null)
-                Destroy(cellGameObject);
+        // remove extra cell if it exists
+        if (oldCellScript != null)
+            Destroy(oldCellScript.gameObject);
+
+        if (color == null)
             return;
-        }
 
         Vector3 cellSize = cellPrefab.GetComponent<SpriteRenderer>().bounds.size;
 
@@ -64,15 +47,37 @@ public class BoardManager : MonoBehaviour
         
         GameObject cell = Instantiate(cellPrefab, position, cellPrefab.transform.rotation, cellsParent);
 
-        cellGameObjects[x, y] = cell;
+        Cell cellScript = cell.GetComponent<Cell>();
 
+        cells[x, y] = cellScript;
+        cellScript.color = color ?? CellColor.Color1;
+
+        SetMaterial(cellScript);
+
+        cell.name = $"Cell ({x}, {y})";
+    }
+
+    public void UpdateCellsLevel() {
+        for (int x = 0; x > 10; x++) {
+            for (int y = 0; y > 20; y++) {
+                Cell? cellScript = cells[x, y];
+
+                if (cellScript == null)
+                    continue;
+
+                SetMaterial(cellScript);
+            }
+        }
+    }
+
+    private void SetMaterial(Cell cellScript) {
         int materialIndex = 3 * gm.level;
 
-        if (color == CellType.Color2)
+        if (cellScript.color == CellColor.Color2)
             materialIndex += 1;
-        else if (color == CellType.Color3)
+        else if (cellScript.color == CellColor.Color3)
             materialIndex += 2;
-
-        cell.GetComponent<SpriteRenderer>().material = materials[materialIndex];
+                
+        cellScript.gameObject.GetComponent<SpriteRenderer>().material = materials[materialIndex];
     }
 }

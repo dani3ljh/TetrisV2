@@ -20,10 +20,13 @@ public class GameManager : MonoBehaviour
         bm.gm = this;
 
         // J piece
-        bm.PlaceCell(6, 9, CellType.Color2);
-        bm.PlaceCell(6, 10, CellType.Color2);
-        bm.PlaceCell(5, 10, CellType.Color2);
-        bm.PlaceCell(4, 10, CellType.Color2);
+        bm.PlaceCell(6, 9, CellColor.Color2);
+        bm.PlaceCell(6, 10, CellColor.Color2);
+        bm.PlaceCell(5, 10, CellColor.Color2);
+        bm.PlaceCell(4, 10, CellColor.Color2);
+        
+        // test overlap removal
+        bm.PlaceCell(5, 10, CellColor.Color3);
     }
 
     /// <summary>
