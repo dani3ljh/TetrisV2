@@ -5,7 +5,8 @@ using UnityEngine;
 /// <summary>
 /// Represents a cell's state of either empty, color1, color2, or color3
 /// </summary>
-public enum CellColor {
+public enum CellColor
+{
     Color1,
     Color2,
     Color3
@@ -26,7 +27,7 @@ public class Cell : MonoBehaviour
     }
 
     /// <summary>
-    /// Update is called every fram, if the MonoBehaviour is enabled.
+    /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
     private void Update() {
         

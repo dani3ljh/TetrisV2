@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 /// <summary>
 /// Manages the entire game
@@ -8,6 +9,11 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public int level;
+    public GameObject cellPrefab;
+
+    [HideInInspector] public Vector3 cellSize;
+
+    [SerializeField] private FallingPiece fp;
 
     private BoardManager bm;
 
@@ -18,19 +24,14 @@ public class GameManager : MonoBehaviour
         bm = GetComponent<BoardManager>();
         // gm runs first so set bm.gm
         bm.gm = this;
+        fp.gm = this;
+        fp.bm = bm;
 
-        // J piece
-        bm.PlaceCell(6, 9, CellColor.Color2);
-        bm.PlaceCell(6, 10, CellColor.Color2);
-        bm.PlaceCell(5, 10, CellColor.Color2);
-        bm.PlaceCell(4, 10, CellColor.Color2);
-        
-        // test overlap removal
-        bm.PlaceCell(5, 10, CellColor.Color3);
+        cellSize = cellPrefab.GetComponent<SpriteRenderer>().bounds.size;
     }
 
     /// <summary>
-    /// Update is called every fram, if the MonoBehaviour is enabled.
+    /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
     private void Update() {
         

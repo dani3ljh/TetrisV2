@@ -8,7 +8,6 @@ using UnityEngine;
 public class BoardManager : MonoBehaviour
 {
     [SerializeField] private Transform cellsParent;
-    [SerializeField] private GameObject cellPrefab;
     [SerializeField] private Material[] materials;
 
     [HideInInspector] public GameManager gm;
@@ -20,11 +19,10 @@ public class BoardManager : MonoBehaviour
     /// Start is called on the frame when a script is enabled just before any of the Update methods are called
     /// </summary>
     private void Start() {
-
     }
 
     /// <summary>
-    /// Update is called every fram, if the MonoBehaviour is enabled
+    /// Update is called every frame, if the MonoBehaviour is enabled
     /// </summary>
     private void Update() {
         
@@ -40,12 +38,10 @@ public class BoardManager : MonoBehaviour
         if (color == null)
             return;
 
-        Vector3 cellSize = cellPrefab.GetComponent<SpriteRenderer>().bounds.size;
-
         // 4.5 cellsWidth left plus x cellsWidth right then factor out cellsWidth, do same for y
-        Vector3 position = new Vector3(cellSize.x * (-4.5f + x), cellSize.y * (9.5f - y), 0);
+        Vector3 position = new Vector3(gm.cellSize.x * (-4.5f + x), gm.cellSize.y * (9.5f - y), 0);
         
-        GameObject cell = Instantiate(cellPrefab, position, cellPrefab.transform.rotation, cellsParent);
+        GameObject cell = Instantiate(gm.cellPrefab, position, gm.cellPrefab.transform.rotation, cellsParent);
 
         Cell cellScript = cell.GetComponent<Cell>();
 
@@ -70,7 +66,7 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    private void SetMaterial(Cell cellScript) {
+    public void SetMaterial(Cell cellScript) {
         int materialIndex = 3 * gm.level;
 
         if (cellScript.color == CellColor.Color2)
